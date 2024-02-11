@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GenAI-Bot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body, html {
+            height: 100%;
+            margin: 0;
+            font-family: Arial;
+            background-color: black; /* Set the background color to black */
+            color: white; /* Set the default text color to white */
+            text-align: center; /* Center align the text */
+        }
+        #chatbox {
+            margin-left: auto;
+            margin-right: auto;
+            width: 60%; /* Increased width of the chatbox */
+            margin-top: 60px;
+            border: 1px solid white; /* Set the border color to white */
+            padding: 10px; /* Add padding for better visibility */
+        }
+        #userInput {
+            margin-left: auto;
+            margin-right: auto;
+            width: 60%; /* Increased width of the input area */
+            margin-top: 20px; /* Adjusted top margin */
+        }
+        #textInput {
+            width: 100%; /* Expanded text input to fill the width */
+            border: none;
+            border-bottom: 3px solid white; /* Set the border color to white */
+            font-family: monospace;
+            font-size: 17px;
+            color: white; /* Set the text color to white */
+            background-color: black; /* Set the background color to black */
+        }
+        .userText {
+            font-family: monospace;
+            font-size: 17px;
+            text-align: right;
+            line-height: 30px;
+        }
+        .userText span {
+            background-color: #808080;
+            padding: 10px;
+            border-radius: 2px;
+        }
+        .botText {
+            font-family: monospace;
+            font-size: 17px;
+            text-align: left;
+            line-height: 30px;
+        }
+        .botText span {
+            background-color: #4169e1;
+            padding: 10px;
+            border-radius: 2px;
+        }
+        #tidbit {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 300px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1><b>GenAI ChatBot</b></h1>
+        <h4><b>Your personal chat assistant</b></h4>
+        <p><img src="static\\chatbot.png.crdownload" alt="Python-BOT" height="210" width="220"></p>
+        <div>
+            <div id="chatbox">
+                <p class="botText">
+                    <span>Hi! I'm your personal Generative-AI chatbot</span>
+                </p>
+            </div>
+            <div id="userInput">
+                <input id="textInput" type="text" name="msg" placeholder="Message" />
+            </div>
+        </div>
+        <script>
+            function getBotResponse() {
+                var rawText = $("#textInput").val();
+                var userHtml = '<p class="userText"><span>' + rawText + "</span></p>";
+                $("#textInput").val("");
+                $("#chatbox").append(userHtml);
+
+                var userInputElement = document.getElementById("userInput");
+                if (userInputElement) {
+                    userInputElement.scrollIntoView({ block: "start", behavior: "smooth" });
+                }
+
+                $.get("/get", { msg: rawText }).done(function (data) {
+                    var botHtml = '<p class="botText"><span>' + data + "</span></p>";
+                    $("#chatbox").append(botHtml);
+
+                    var userInputElement = document.getElementById("userInput");
+                    if (userInputElement) {
+                        userInputElement.scrollIntoView({ block: "start", behavior: "smooth" });
+                    }
+                });
+            }
+
+            $("#textInput").keypress(function (e) {
+                if (e.which == 13) {
+                    getBotResponse();
+                }
+            });
+        </script>
+    </div>
+</body>
+</html>
